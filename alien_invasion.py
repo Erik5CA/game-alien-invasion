@@ -67,14 +67,15 @@ class AlienInvasion:
         """Start a new game when the player clicks Play"""
         button_clicked = self.play_button.rect.collidepoint(mouse_pos)
         if button_clicked and not self.game_active:
-            self.settings.initialize_dynamic_settings()
             self._start_game()
 
     def _start_game(self):
         """Start the game"""
+        self.settings.initialize_dynamic_settings()
         self.stats.reset_stats()
         self.sb.prep_score()
         self.sb.prep_level()
+        self.sb.prep_ships()
         self.game_active = True
 
         # Get rid of any remaining bullets and aliens.
@@ -164,8 +165,9 @@ class AlienInvasion:
     def _ship_hit(self):
         """Respond to the ship begin hit by an alien"""
         if self.stats.ship_left > 0:
-            # Decrement ship left.
+            # Decrement ship left and update scoreboard.
             self.stats.ship_left -= 1
+            self.sb.prep_ships()
 
             # Get rid of any remaining bullets and aliens.
             self.bullets.empty()
